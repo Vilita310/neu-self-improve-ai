@@ -1,6 +1,6 @@
-# Week 01 — Bandits & Gradient Policy
+# Week 02 Assignment
 
-This directory contains my solution for Week 1.
+This directory contains my solution for Week 2.
 
 ## How to run
 
