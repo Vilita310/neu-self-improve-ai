@@ -1,11 +1,11 @@
 # bandit_hw.py
-# Minimal MDP (Bandit) + Figure 2.2 reproduction + Gradient Bandit (4 settings)
+# k-armed bandit framework, Figure 2.2 reproduction, and gradient bandit (4 settings)
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 # ---------------------------
-# Minimal MDP Framework (Bandit)
+# Environment
 # ---------------------------
 
 class Env:
@@ -17,7 +17,7 @@ class Env:
 class Bandit(Env):
     """
     Stationary k-armed bandit.
-    True action values q_true ~ N(0,1); reward ~ N(q_true[a], 1).
+    True values q* ~ N(0,1); reward ~ N(q*[a], 1).
     """
     def __init__(self, k=10):
         self.k = k
@@ -29,7 +29,7 @@ class Bandit(Env):
 
     def step(self, action: int):
         reward = np.random.normal(self.q_true[action], 1.0)
-        return None, reward, False, {}  # (next_state, reward, done, info)
+        return None, reward, False, {}
 
 # ---------------------------
 # Agents
@@ -43,7 +43,7 @@ class Agent:
 
 class EpsilonGreedyAgent(Agent):
     """
-    ε-greedy with sample-average update (as in Sutton & Barto Figure 2.2).
+    ε-greedy with sample-average updates.
     """
     def __init__(self, k=10, epsilon=0.1, q_init=0.0):
         self.k = k
@@ -58,17 +58,13 @@ class EpsilonGreedyAgent(Agent):
 
     def update(self, action, reward, next_state=None):
         self.action_count[action] += 1
-        step = 1.0 / self.action_count[action]  # sample-average
+        step = 1.0 / self.action_count[action]
         self.q_est[action] += step * (reward - self.q_est[action])
 
 class GradientBanditAgent(Agent):
     """
     Gradient bandit with softmax over preferences H.
-    Four settings will be tested:
-      - no baseline, α=0.1
-      - no baseline, α=0.4
-      - with baseline, α=0.1
-      - with baseline, α=0.4
+    Optional baseline = running average reward.
     """
     def __init__(self, k=10, alpha=0.1, baseline=True):
         self.k = k
@@ -90,14 +86,14 @@ class GradientBanditAgent(Agent):
 
     def update(self, action, reward, next_state=None):
         self.t += 1
-        baseline = 0.0
+        b = 0.0
         if self.baseline:
             self.avg_reward += (reward - self.avg_reward) / self.t
-            baseline = self.avg_reward
+            b = self.avg_reward
         self._update_policy()
         onehot = np.zeros(self.k)
         onehot[action] = 1.0
-        self.H += self.alpha * (reward - baseline) * (onehot - self.pi)
+        self.H += self.alpha * (reward - b) * (onehot - self.pi)
 
 # ---------------------------
 # Experiment
@@ -128,35 +124,37 @@ def simulate(agent_ctor, runs=2000, steps=1000, env_ctor=Bandit, **agent_kwargs)
     return rewards.mean(axis=0), optimal.mean(axis=0)
 
 def main():
-    # Fixed configuration per assignment
+    # Fixed setup per assignment
     runs = 2000
     steps = 1000
     seed = 0
     np.random.seed(seed)
 
-    # Figure 2.2 reproduction: ε = 0, 0.01, 0.1 (sample-average updates)
+    # Figure 2.2: ε-greedy (sample-average updates)
     _, opt_eps0   = simulate(EpsilonGreedyAgent, runs=runs, steps=steps, epsilon=0.0)
     _, opt_eps001 = simulate(EpsilonGreedyAgent, runs=runs, steps=steps, epsilon=0.01)
     _, opt_eps01  = simulate(EpsilonGreedyAgent, runs=runs, steps=steps, epsilon=0.1)
 
-    # Gradient bandit: four required settings
-    _, opt_grad_nb_a01 = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.1, baseline=False)
-    _, opt_grad_nb_a04 = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.4, baseline=False)
-    _, opt_grad_b_a01  = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.1, baseline=True)
-    _, opt_grad_b_a04  = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.4, baseline=True)
+    # Gradient bandit (four settings)
+    _, opt_g_nb_a01 = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.1, baseline=False)
+    _, opt_g_nb_a04 = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.4, baseline=False)
+    _, opt_g_b_a01  = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.1, baseline=True)
+    _, opt_g_b_a04  = simulate(GradientBanditAgent, runs=runs, steps=steps, alpha=0.4, baseline=True)
 
-    # Plot: Figure 2.2 (three ε-greedy curves) + four gradient curves
+    # Plot as percentage to match the book axis
+    pct = lambda y: y * 100.0
+
     plt.figure(figsize=(12, 8))
-    plt.plot(opt_eps0,   label="ε-greedy ε=0 (sample-average)")
-    plt.plot(opt_eps001, label="ε-greedy ε=0.01 (sample-average)")
-    plt.plot(opt_eps01,  label="ε-greedy ε=0.1 (sample-average)")
-    plt.plot(opt_grad_nb_a01, label="Gradient α=0.1 (no baseline)")
-    plt.plot(opt_grad_nb_a04, label="Gradient α=0.4 (no baseline)")
-    plt.plot(opt_grad_b_a01,  label="Gradient α=0.1 (with baseline)")
-    plt.plot(opt_grad_b_a04,  label="Gradient α=0.4 (with baseline)")
+    plt.plot(pct(opt_eps0),   label="ε-greedy ε=0")
+    plt.plot(pct(opt_eps001), label="ε-greedy ε=0.01")
+    plt.plot(pct(opt_eps01),  label="ε-greedy ε=0.1")
+    plt.plot(pct(opt_g_nb_a01), label="Gradient α=0.1 (no baseline)")
+    plt.plot(pct(opt_g_nb_a04), label="Gradient α=0.4 (no baseline)")
+    plt.plot(pct(opt_g_b_a01),  label="Gradient α=0.1 (with baseline)")
+    plt.plot(pct(opt_g_b_a04),  label="Gradient α=0.4 (with baseline)")
     plt.xlabel("Steps")
     plt.ylabel("% Optimal Action")
-    plt.title("Figure 2.2 Reproduction + Gradient Bandit (4 settings)")
+    plt.title("Figure 2.2 + Gradient Bandit (4 settings)")
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
