@@ -51,7 +51,7 @@ cd week_04
 python src/run_tictactoe.py --iters 2000 --c 1.414
 ```
 
-## Notes (student-style)
+## Notes
 
 * I default to `c = sqrt(2)` but `1.0~2.0` all felt fine on Tic-Tac-Toe. More sims > fancy tricks.
 * Rollouts are uniform random; for transit I cap depth and use small discount. Obvious room for a learned or heuristic rollout policy.
