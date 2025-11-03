@@ -1,0 +1,2 @@
+method,success_rate,avg_reward,avg_steps,episodes,notes
+RAGEN + A*PO (ours),0.67,0.173,9.28,100,from evaluation_results.json
