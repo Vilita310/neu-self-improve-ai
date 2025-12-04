@@ -1,0 +1,5 @@
+benchmark:
+  name: FEVER
+  path: data/fever
+search:
+  budget: 50

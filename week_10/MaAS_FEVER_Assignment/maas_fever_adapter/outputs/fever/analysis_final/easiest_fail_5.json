@@ -1,0 +1,67 @@
+[
+  {
+    "id": 157551,
+    "input": "Seohyun sings.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "SUPPORTS",
+    "success": false,
+    "score": 0.0,
+    "trace": {
+      "step": "execution",
+      "status": "Low confidence score."
+    }
+  },
+  {
+    "id": 75629,
+    "input": "Seohyun acts.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "SUPPORTS",
+    "success": false,
+    "score": 0.0,
+    "trace": {
+      "step": "execution",
+      "status": "Low confidence score."
+    }
+  },
+  {
+    "id": 61926,
+    "input": "Augustus died.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "SUPPORTS",
+    "success": false,
+    "score": 0.0,
+    "trace": {
+      "step": "execution",
+      "status": "Low confidence score."
+    }
+  },
+  {
+    "id": 204361,
+    "input": "The Cretaceous ended.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "SUPPORTS",
+    "success": false,
+    "score": 0.0,
+    "trace": {
+      "step": "execution",
+      "status": "Low confidence score."
+    }
+  },
+  {
+    "id": 132133,
+    "input": "Paramore is Canadian.",
+    "output": "SUPPORTS",
+    "gold_output": "REFUTES",
+    "success": false,
+    "score": 0.0,
+    "trace": {
+      "step": "verification",
+      "operator": "label_classifier",
+      "reasoning": "Retrieval Bias: The system retrieved documents matching the entities but failed to identify the negation context.",
+      "architecture": [
+        "web_retrieve",
+        "label_classifier"
+      ]
+    }
+  }
+]

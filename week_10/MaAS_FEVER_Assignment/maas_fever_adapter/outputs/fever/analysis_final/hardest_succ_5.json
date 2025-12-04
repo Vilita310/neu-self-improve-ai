@@ -1,0 +1,76 @@
+[
+  {
+    "id": 111251,
+    "input": "Tremont Street Subway served a light rail station on the MBTA Green Line system, and is located on the southeast corner of Boston Common at the intersection of Boylston Street and Tremont Street called Boylston station.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "NOT ENOUGH INFO",
+    "success": true,
+    "score": 1.0,
+    "trace": {
+      "step": "execution",
+      "status": "Verified against evidence."
+    }
+  },
+  {
+    "id": 26138,
+    "input": "Tremont Street Subway served a light rail station on the MBTA Green Line system, and is located on the southeast corner of Boston Common at the intersection of Boylston Street and Tremont Street.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "NOT ENOUGH INFO",
+    "success": true,
+    "score": 1.0,
+    "trace": {
+      "step": "execution",
+      "status": "Verified against evidence."
+    }
+  },
+  {
+    "id": 86459,
+    "input": "South African Communist Party is a partner of an alliance between the African National Congress (ANC), the Congress of South African Trade Unions (COSATU) and the South African Communist Party (SACP).",
+    "output": "SUPPORTS",
+    "gold_output": "SUPPORTS",
+    "success": true,
+    "score": 1.0,
+    "trace": {
+      "step": "synthesis",
+      "operator": "planner -> multi_hop_retrieve -> verifier",
+      "reasoning": "Query Decomposition: The planner successfully broke down the complex claim into sub-questions.",
+      "architecture": [
+        "planner",
+        "web_retrieve",
+        "evidence_selector",
+        "verifier"
+      ]
+    }
+  },
+  {
+    "id": 77743,
+    "input": "Mohra got Filmfare nominations for Best Film, Best Director, Best Actor, Best Supporting Actress, Best Male Debut, Best Story, Best Editing, Best Cinematography, and Best Art Direction.",
+    "output": "NOT ENOUGH INFO",
+    "gold_output": "NOT ENOUGH INFO",
+    "success": true,
+    "score": 1.0,
+    "trace": {
+      "step": "execution",
+      "status": "Verified against evidence."
+    }
+  },
+  {
+    "id": 12738,
+    "input": "Australia (2008 film) production took place in a town and locality in the Whitsunday Region on the eastern coast of Queensland, Australia called Bowen.",
+    "output": "SUPPORTS",
+    "gold_output": "SUPPORTS",
+    "success": true,
+    "score": 1.0,
+    "trace": {
+      "step": "synthesis",
+      "operator": "planner -> multi_hop_retrieve -> verifier",
+      "reasoning": "Query Decomposition: The planner successfully broke down the complex claim into sub-questions.",
+      "architecture": [
+        "planner",
+        "web_retrieve",
+        "evidence_selector",
+        "verifier"
+      ]
+    }
+  }
+]
